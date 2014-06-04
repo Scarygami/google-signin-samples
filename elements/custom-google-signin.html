@@ -1,0 +1,150 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
+
+<!--
+Wrapper for a google-signin element to have customizable signIn/signOut buttons
+-->
+<polymer-element name="custom-google-signin" attributes="clientId scopes cookiePolicy requestVisibleActions">
+  <template>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+    <style>
+      :host {
+        display: inline-block;
+      }
+      google-signin {
+        display: none;
+      }
+
+      .customBtn {
+        display: inline-block;
+        border-radius: 5px;
+        white-space: nowrap;
+        cursor: pointer;
+        color: white;
+      }
+      .signIn {
+        background: #dd4b39;
+      }
+      .signIn:hover {
+        background: #e74b37;
+      }
+      .signOut {
+        background: #999;
+      }
+      .signOut:hover {
+        background: #aaa;
+      }
+      span.label {
+        font-weight: bold;
+      }
+      span.icon {
+        background: url('https://google-developers.appspot.com/+/images/branding/btn_red_32.png') transparent 5px 50% no-repeat;
+        display: inline-block;
+        vertical-align: middle;
+        width: 40px;
+        height: 35px;
+      }
+      .signIn span.icon {
+        border-right: #bb3f30 1px solid;
+      }
+      .signOut span.icon {
+        border-right: #888 1px solid;
+      }
+      span.buttonText {
+        display: inline-block;
+        vertical-align: middle;
+        padding-left: 35px;
+        padding-right: 35px;
+        font-size: 14px;
+        font-weight: bold;
+        font-family: 'Roboto',arial,sans-serif;
+      }
+
+    </style>
+    <google-signin
+      id="signinElement"
+      clientId="{{clientId}}"
+      scopes="{{scopes}}"
+      cookiePolicy="{{cookiePolicy}}"
+      requestVisibleActions="{{requestVisibleActions}}"
+      on-google-signin-success="{{signInSuccess}}"
+      on-google-signin-failure="{{signedOut}}"
+      on-google-signed-out="{{signedOut}}"></google-signin>
+
+    <template if="{{ !signedIn }}">
+    <div class="customBtn signIn" on-click="{{signIn}}">
+      <span class="icon"></span>
+      <span class="buttonText">Sign in with Google</span>
+    </div>
+    </template>
+    <template if="{{ signedIn }}">
+    <div class="customBtn signOut" on-click="{{signOut}}">
+      <span class="icon"></span>
+      <span class="buttonText">Sign out</span>
+    </div>
+    </template>
+  </template>
+
+  <script>
+    Polymer('custom-google-signin', {
+      /**
+       * a Google Developers clientId reference
+       *
+       * @attribute clientId
+       * @type string
+       */
+      clientId: '',
+      /**
+       * The scopes to provide access to (e.g https://www.googleapis.com/auth/drive)
+       * and should be space-delimited.
+       *
+       * @attribute scopes
+       * @type string
+       * @default 'profile'
+       */
+      scopes: 'profile',
+      /**
+       * The cookie policy defines what URIs have access to the session cookie
+       * remembering the user's sign-in state.
+       * See https://developers.google.com/+/web/signin/reference#determining_a_value_for_cookie_policy
+       *
+       * @attribute cookiePolicy
+       * @type string
+       * @default 'single_host_origin'
+       */
+      cookiePolicy: 'single_host_origin',
+      /**
+       * The app activity types you want to write on behalf of the user
+       * (e.g http://schemas.google.com/AddActivity)
+       *
+       * @attribute requestVisibleActions
+       * @type string
+       */
+      requestVisibleActions: '',
+
+      signedIn: false,
+
+      attached: function () {
+        if (this.clientId === '') {
+          throw 'A valid clientId is required to use this element';
+        }
+      },
+
+      signInSuccess: function (e) {
+        this.signedIn = true;
+      },
+
+      signedOut: function () {
+        this.signedIn = false;
+      },
+
+      signIn: function () {
+        this.$.signinElement.signIn();
+      },
+
+      signOut: function () {
+        this.$.signinElement.signOut();
+      }
+    });
+  </script>
+</polymer-element>

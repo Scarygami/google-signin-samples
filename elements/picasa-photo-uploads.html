@@ -1,0 +1,75 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
+
+<!--
+Element showing recent photo uploads for the authenticated user.
+Needs a google-signin element included somewhere on the same page
+that handles authentication.
+-->
+<polymer-element name="picasa-photo-uploads" attributes="max">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+    </style>
+
+    <google-signin-aware
+      scopes="https://picasaweb.google.com/data/"
+      on-google-signin-aware-success="{{signIn}}"
+      on-google-signin-aware-failure="{{signOut}}"
+      on-google-signin-aware-signed-out="{{signOut}}"></google-signin-aware>
+
+    <template if="{{signedIn}}">
+      <script src="https://picasaweb.google.com/data/feed/api/user/default?kind=photo&amp;max-results={{max}}&amp;thumbsize=160c&amp;access_token={{accessToken}}&amp;alt=json-in-script&amp;callback={{callback}}"></script>
+      <template repeat="{{photo in photos.entry}}">
+        <a href="https://plus.google.com/photos/yourphotos?pid={{photo.gphoto$id.$t}}&amp;oid={{photos.gphoto$user.$t}}">
+          <img src="{{photo.media$group.media$thumbnail[0].url}}" title="{{photo.summary.$t || photo.title.$t}}">
+        </a>
+      </template>
+    </template>
+  </template>
+  <script>
+    Polymer('picasa-photo-uploads', {
+      /**
+       * Number of photos to display
+       * minimum of 1, maximum of 100, default 50
+       * @attribute max
+       * @type integer
+       */
+      max: 50,
+
+      signedIn: false,
+
+      signIn: function (e) {
+        // Get OAuth Access Token from Auth response
+        this.accessToken = e.detail.result.access_token;
+        this.signedIn = true;
+      },
+
+      signOut: function () {
+        this.friends = null;
+        this.signedIn = false;
+      },
+
+      attached: function () {
+        this.max = parseInt(this.max, 10) || 50;
+        if (this.max > 100) { this.max = 100; }
+        if (this.max < 1) { this.max = 1; }
+
+        // generate unique callback function for JSONP
+        var callback_id = (new Date()).getTime();
+        while (!this.callback) {
+          if (!window["picasa_photo_uploads_callback_" + callback_id]) {
+            this.callback = "picasa_photo_uploads_callback_" + callback_id;
+          } else {
+            callback_id++;
+          }
+        }
+        window[this.callback] = function (resp) {
+          this.photos = resp.feed;
+        }.bind(this);
+      }
+    });
+  </script>
+</polymer-element>

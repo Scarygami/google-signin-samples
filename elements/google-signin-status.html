@@ -1,0 +1,72 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../bower_components/google-apis/google-client-api.html">
+
+<!--
+Element providing information about the authenticated user.
+Needs a google-signin element included somewhere on the same page
+that handles authentication.
+-->
+<polymer-element name="google-signin-status">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+
+      div {
+        padding: 5px 10px;
+        border: 1px solid #999;
+      }
+
+      img {
+        vertical-align: bottom;
+        max-width: 30px;
+        max-height: 30px;
+      }
+
+    </style>
+
+    <google-api-loader id="plus" name="plus" version="v1"
+      on-google-api-load="{{displayProfile}}">
+    </google-calendar-api>
+    <google-signin-aware
+      scopes="profile"
+      on-google-signin-aware-success="{{signIn}}"
+      on-google-signin-aware-failure="{{signOut}}"
+      on-google-signin-aware-signed-out="{{signOut}}"></google-signin-aware>
+
+    <div>
+      <template if="{{signedIn}}">
+        Signed in as <b>{{profile.displayName}}</b> <a href="{{profile.url}}"><img src="{{profile.image.url}}"></a>
+      </template>
+      <template if="{{!signedIn}}">
+        Not signed in!
+      </template>
+    </div>
+  </template>
+  <script>
+    Polymer('google-signin-status', {
+      signedIn: false,
+
+      signIn: function () {
+        this.signedIn = true;
+        this.displayProfile();
+      },
+
+      signOut: function () {
+        this.profile = null;
+        this.signedIn = false;
+      },
+
+      displayProfile: function () {
+        if (this.signedIn && this.$.plus.api) {
+          var request = this.$.plus.api.people.get({"userId": "me"});
+          request.execute(function (resp) {
+            this.profile = resp;
+          }.bind(this));
+        }
+      }
+    });
+  </script>
+</polymer-element>

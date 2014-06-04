@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>google-signin-samples Demo 1</title>
+
+    <script src="bower_components/platform/platform.js"></script>
+    <link rel="import" href="bower_components/google-signin/google-signin.html">
+    <link rel="import" href="elements/google-signin-status.html">
+    <link rel="import" href="elements/google-plus-friends.html">
+    <link rel="import" href="elements/picasa-photo-uploads.html">
+
+    <style>
+      google-signin-status { float: right; }
+      google-plus-friends { max-width: 550px; }
+    </style>
+  </head>
+  <body>
+
+    <google-signin
+      clientId="<YOUR_CLIENT_ID>"
+      scopes="https://picasaweb.google.com/data/ https://www.googleapis.com/auth/plus.login">
+    </google-signin>
+
+    <google-signin-status></google-signin-status>
+
+    <br><br>
+    Google+ friends:<br>
+    <google-plus-friends max="60"></google-plus-friends>
+    <br><hr><br>
+    Recent photo uploads:<br>
+    <picasa-photo-uploads max="50"></picasa-photo-uploads>
+
+    <br><hr><br>
+
+  </body>
+</html>

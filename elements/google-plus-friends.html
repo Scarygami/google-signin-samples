@@ -1,0 +1,77 @@
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../bower_components/google-apis/google-client-api.html">
+
+<!--
+Element showing a list of Google+ friends for the authenticated user.
+Needs a google-signin element included somewhere on the same page
+that handles authentication.
+-->
+<polymer-element name="google-plus-friends" attributes="max">
+  <template>
+    <style>
+      :host {
+        display: inline-block;
+      }
+    </style>
+
+    <google-api-loader id="plus" name="plus" version="v1"
+      on-google-api-load="{{displayProfile}}">
+    </google-api-loader>
+    <google-signin-aware
+      scopes="https://www.googleapis.com/auth/plus.login"
+      on-google-signin-aware-success="{{signIn}}"
+      on-google-signin-aware-failure="{{signOut}}"
+      on-google-signin-aware-signed-out="{{signOut}}"></google-signin-aware>
+
+    <template if="{{signedIn}}">
+      <template repeat="{{friend in friends}}">
+        <a href="{{friend.url}}"><img src="{{friend.image.url}}" title="{{friend.displayName}}"></a>
+      </template>
+    </template>
+  </template>
+  <script>
+    Polymer('google-plus-friends', {
+      /**
+       * Number of friends to display
+       * minimum of 1, maximum of 100, default 50
+       * @attribute max
+       * @type integer
+       */
+      max: 50,
+
+      signedIn: false,
+
+      signIn: function () {
+        this.signedIn = true;
+        this.displayFriends();
+      },
+
+      signOut: function () {
+        this.friends = null;
+        this.signedIn = false;
+      },
+
+      displayFriends: function () {
+        if (this.signedIn && this.$.plus.api) {
+          var request = this.$.plus.api.people.list({
+                          'userId': 'me',
+                          'collection': 'visible',
+                          'maxResults': this.max,
+                          'orderBy': 'best'
+                        });
+
+          request.execute(function (resp) {
+            this.friends = resp.items;
+          }.bind(this));
+        }
+      },
+
+      attached: function () {
+        this.max = parseInt(this.max, 10) || 50;
+        if (this.max > 100) { this.max = 100; }
+        if (this.max < 1) { this.max = 1; }
+      }
+    });
+  </script>
+</polymer-element>
