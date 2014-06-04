@@ -1,4 +1,4 @@
 google-signin-samples
 =====================
 
-Some examples showing how to use the `google-signin` Polymer element in your own custom elements.
+Some samples showing how to use the `google-signin` Polymer element in your own custom elements.
