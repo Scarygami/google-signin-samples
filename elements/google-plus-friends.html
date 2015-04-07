@@ -1,5 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../bower_components/google-signin/google-signin-aware.html">
 <link rel="import" href="../bower_components/google-apis/google-client-api.html">
 
 <!--
@@ -16,7 +16,7 @@ that handles authentication.
     </style>
 
     <google-api-loader id="plus" name="plus" version="v1"
-      on-google-api-load="{{displayProfile}}">
+      on-google-api-load="{{displayFriends}}">
     </google-api-loader>
     <google-signin-aware
       scopes="https://www.googleapis.com/auth/plus.login"
@@ -42,7 +42,7 @@ that handles authentication.
 
       signedIn: false,
 
-      signIn: function () {
+      signIn: function (e) {
         this.signedIn = true;
         this.displayFriends();
       },

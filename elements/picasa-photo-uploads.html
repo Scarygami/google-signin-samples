@@ -1,5 +1,5 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../bower_components/google-signin/google-signin-aware.html">
 
 <!--
 Element showing recent photo uploads for the authenticated user.
@@ -43,7 +43,7 @@ that handles authentication.
 
       signIn: function (e) {
         // Get OAuth Access Token from Auth response
-        this.accessToken = e.detail.result.access_token;
+        this.accessToken = e.detail.user.getAuthResponse().access_token;
         this.signedIn = true;
       },
 

@@ -2,8 +2,9 @@
   "name": "google-signin-samples",
   "version": "0.0.1",
   "dependencies": {
-    "polymer": "Polymer/polymer",
-    "google-apis": "PolymerLabs/google-apis",
-    "google-signin": "GoogleWebComponents/google-signin"
+    "polymer": "Polymer/polymer#^0.5.5",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.5.5",
+    "google-apis": "GoogleWebComponents/google-apis#^0.4.4",
+    "google-signin": "GoogleWebComponents/google-signin#^0.3.0"
   }
 }
