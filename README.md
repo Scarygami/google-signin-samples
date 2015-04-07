@@ -34,7 +34,7 @@ directly calling the `signIn` and `signOut` methods of this element via nicer cu
 `demo1.html` is a sample page that includes all samples elements and a `google-signin` element.
 [Live Version](https://scary-experiments.appspot.com/google-signin-samples/demo1.html)
 
-`demo2.html` is almost the same sample page but includes a `custom-google-signin` that renders nicer buttons.
+`demo2.html` is almost the same sample page but includes a `custom-google-signin` with custom buttons.
 [Live Version](https://scary-experiments.appspot.com/google-signin-samples/demo2.html)
 
 
